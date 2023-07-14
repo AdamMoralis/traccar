@@ -104,5 +104,5 @@ jobs:
         env:
           AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
         run: |
-         az storage blob upload-batch --destination traccar --account-name traccarinstallers --account-key vZrkKGFEeNkXMSbNXJlwQC3EyZ+c6UoGj+N0LZpE1xec7yIa01+lgUnH4uih5jPwQA4UJ30Iksod+AStmv5y7w== --source . --pattern "traccar-*.zip"
+         az storage blob upload-batch --destination traccar --account-name traccarinstallers1 --account-key vZrkKGFEeNkXMSbNXJlwQC3EyZ+c6UoGj+N0LZpE1xec7yIa01+lgUnH4uih5jPwQA4UJ30Iksod+AStmv5y7w== --source . --pattern "traccar-*.zip"
 
