@@ -1,0 +1,109 @@
+name: Build and push and deploy docker images
+
+env:
+  AZURE_CONTAINER_REGISTRY: tekka.azurecr.io
+
+on:
+  push:
+    branches:
+      - Dev
+      - v[0-9]+.[0-9]+
+defaults:
+  run:
+    shell: bash
+jobs:
+  docker-build-push:
+    name: Build and push docker images
+    needs: build-installer
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set environment variables
+        run: |
+          echo "AZURE_STORAGE_CONNECTION_STRING=${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}" >> $GITHUB_ENV      
+      - name: Login to Azure Container Registry
+        uses: azure/docker-login@v1
+        with:
+          login-server: tekka.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          file: Dockerfile.${{ matrix.os }}
+          tags: tekka.azurecr.io/traccar:v7
+          platforms: linux
+          push: true
+      - name: Deploy to Azure VM
+        env:
+          AZURE_VM_IP: 51.144.228.156
+          VM_USERNAME: said
+          VM_PASSWORD: ${{ secrets.VM_PASSWORD }}
+        run: |
+          sshpass -p "${VM_PASSWORD}" ssh -o StrictHostKeyChecking=no ${VM_USERNAME}@${AZURE_VM_IP} '
+            docker login tekka.azurecr.io -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }}
+            docker stop tekka || true
+            docker rm tekka || true
+            docker pull tekka.azurecr.io/traccar:v1
+            docker run -d --name tekka -p 8082:8082 tekka.azurecr.io/traccar:v7'
+           
+  build-installer:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: true
+      - run: git checkout ${{ github.ref_name }}
+        working-directory: ./traccar-web
+      - uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+      - run: ./gradlew build
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+          cache-dependency-path: |
+            traccar-web/package-lock.json
+            traccar-web/modern/package-lock.json
+            
+      
+
+      - run: |
+          wget -q https://trials.sencha.com/cmd/7.6.0/SenchaCmd-7.6.0.87-linux-amd64.sh.zip
+          unzip SenchaCmd-*.zip
+          ./SenchaCmd-*.sh -q
+          echo "$HOME/bin/Sencha/Cmd/" >> $GITHUB_PATH
+      - run: ./traccar-web/tools/package.sh
+      - run: |
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt-get install libgcc-s1:i386 libstdc++6:i386
+          sudo apt-get install innoextract makeself wine32 s3cmd
+      - name: Build installers
+        working-directory: ./setup
+        run: |
+          wget -q http://files.jrsoftware.org/is/5/isetup-5.5.6.exe
+          wget -q https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.6+10/OpenJDK17U-jdk_x64_windows_hotspot_17.0.6_10.zip
+          wget -q https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.6+10/OpenJDK17U-jdk_x64_linux_hotspot_17.0.6_10.tar.gz
+          wget -q https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.6+10/OpenJDK17U-jdk_arm_linux_hotspot_17.0.6_10.tar.gz
+          wget -q https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.6+10/OpenJDK17U-jdk_aarch64_linux_hotspot_17.0.6_10.tar.gz
+          ./package.sh ${{ github.event.inputs.version }} linux-64
+      - name: Upload installers to Azure Blob Storage
+        working-directory: ./setup
+        env:
+          AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
+        run: |
+         az storage blob upload-batch --destination traccar --account-name traccarinstallers --account-key g3rh02VDjZMMzqKAVRygFZbkEeS3Cw9WZ0VZeXDjGOEYwq1T46GoVgV1YXotHtpzBtOUs0Xw3o+O+ASt3lkRjg== --source . --pattern "traccar-*.zip"
+
