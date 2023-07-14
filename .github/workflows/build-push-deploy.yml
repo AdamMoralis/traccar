@@ -42,7 +42,7 @@ jobs:
           push: true
       - name: Deploy to Azure VM
         env:
-          AZURE_VM_IP: 51.144.228.156
+          AZURE_VM_IP: 108.143.109.20
           VM_USERNAME: said
           VM_PASSWORD: ${{ secrets.VM_PASSWORD }}
         run: |
@@ -105,5 +105,5 @@ jobs:
         env:
           AZURE_STORAGE_CONNECTION_STRING: ${{ secrets.AZURE_STORAGE_CONNECTION_STRING }}
         run: |
-         az storage blob upload-batch --destination traccar --account-name traccarinstallers --account-key g3rh02VDjZMMzqKAVRygFZbkEeS3Cw9WZ0VZeXDjGOEYwq1T46GoVgV1YXotHtpzBtOUs0Xw3o+O+ASt3lkRjg== --source . --pattern "traccar-*.zip"
+         az storage blob upload-batch --destination traccar --account-name traccarinstallers --account-key vZrkKGFEeNkXMSbNXJlwQC3EyZ+c6UoGj+N0LZpE1xec7yIa01+lgUnH4uih5jPwQA4UJ30Iksod+AStmv5y7w== --source . --pattern "traccar-*.zip"
 
