@@ -1,7 +1,7 @@
 name: Build and push and deploy docker images
 
 env:
-  AZURE_CONTAINER_REGISTRY: tekka.azurecr.io
+  AZURE_CONTAINER_REGISTRY: traccar.azurecr.io
 
 on:
   push:
@@ -30,14 +30,14 @@ jobs:
       - name: Login to Azure Container Registry
         uses: azure/docker-login@v1
         with:
-          login-server: tekka.azurecr.io
+          login-server: traccar.azurecr.io
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
           file: Dockerfile.${{ matrix.os }}
-          tags: tekka.azurecr.io/traccar:v7
+          tags: traccar.azurecr.io/traccar:v7
           platforms: linux
           push: true
       - name: Deploy to Azure VM
@@ -77,8 +77,7 @@ jobs:
           cache-dependency-path: |
             traccar-web/package-lock.json
             traccar-web/modern/package-lock.json
-            
-      
+
 
       - run: |
           wget -q https://trials.sencha.com/cmd/7.6.0/SenchaCmd-7.6.0.87-linux-amd64.sh.zip
