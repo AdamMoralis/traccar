@@ -20,7 +20,7 @@
 
     <entry key='database.driver'>com.microsoft.sqlserver.jdbc.SQLServerDriver</entry>
     <entry key='database.url'>jdbc:sqlserver://traccarserver1.database.windows.net:1433;databaseName=traccar</entry>
-    <entry key='database.user'>said</entry>
+    <entry key='database.user'>traccarserver1</entry>
     <entry key='database.password'>rachidDatabase@321</entry>
 
 </properties>
