@@ -77,7 +77,12 @@ jobs:
           cache-dependency-path: |
             traccar-web/package-lock.json
             traccar-web/modern/package-lock.json
-
+            
+      - name: Create opt/traccar directory
+        run: mkdir -p /opt/traccar
+        
+      - name: Copy Jar file to /opt/traccar
+        run:  cp target/target-server.jar /opt/traccar
 
       - run: |
           wget -q https://trials.sencha.com/cmd/7.6.0/SenchaCmd-7.6.0.87-linux-amd64.sh.zip
