@@ -37,7 +37,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           file: Dockerfile.${{ matrix.os }}
-          tags: traccar.azurecr.io/traccar:v7
+          tags: traccar.azurecr.io/traccar:v1
           platforms: linux
           push: true
       - name: Deploy to Azure VM
@@ -47,11 +47,11 @@ jobs:
           VM_PASSWORD: ${{ secrets.VM_PASSWORD }}
         run: |
           sshpass -p "${VM_PASSWORD}" ssh -o StrictHostKeyChecking=no ${VM_USERNAME}@${AZURE_VM_IP} '
-            docker login tekka.azurecr.io -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }}
-            docker stop tekka || true
-            docker rm tekka || true
-            docker pull tekka.azurecr.io/traccar:v1
-            docker run -d --name tekka -p 8082:8082 tekka.azurecr.io/traccar:v7'
+            docker login traccar.azurecr.io -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }}
+            docker stop traccar || true
+            docker rm traccar || true
+            docker pull traccar.azurecr.io/traccar:v1
+            docker run -d --name traccar -p 8082:8082 traccar.azurecr.io/traccar:v1'
            
   build-installer:
 
