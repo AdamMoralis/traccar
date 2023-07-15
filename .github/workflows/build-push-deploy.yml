@@ -37,7 +37,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           file: Dockerfile.${{ matrix.os }}
-          tags: traccar.azurecr.io/traccar:v3
+          tags: traccar.azurecr.io/traccar:v4
           platforms: linux
           push: true
       - name: Deploy to Azure VM
@@ -51,7 +51,7 @@ jobs:
             docker stop traccar || true
             docker rm traccar || true
             docker pull traccar.azurecr.io/traccar:v3
-            docker run -d --name traccar -p 8082:8082 traccar.azurecr.io/traccar:v3'
+            docker run -d --name traccar -p 8082:8082 traccar.azurecr.io/traccar:v4'
            
   build-installer:
 
