@@ -34,10 +34,7 @@ jobs:
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
-      - name: Create opt/traccar directory and copy JAR file
-        run: |
-            mkdir -p /opt/traccar
-            cp target/tracker-server.jar /opt/traccar
+
 
       - name: Build and push
         uses: docker/build-push-action@v2
