@@ -43,7 +43,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           file: Dockerfile.${{ matrix.os }}
-          tags: traccar.azurecr.io/traccar:v5
+          tags: traccar.azurecr.io/traccar:v6
           platforms: linux
           push: true
           build-args: |
@@ -58,8 +58,8 @@ jobs:
             docker login traccar.azurecr.io -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }}
             docker stop traccar || true
             docker rm traccar || true
-            docker pull traccar.azurecr.io/traccar:v5
-            docker run -d --name traccar -p 8082:8082 traccar.azurecr.io/traccar:v5'
+            docker pull traccar.azurecr.io/traccar:v6
+            docker run -d --name traccar -p 8082:8082 traccar.azurecr.io/traccar:v6'
            
   build-installer:
 
@@ -77,7 +77,7 @@ jobs:
           distribution: temurin
           java-version: 17
           cache: gradle
-      - run: ./gradlew assemble
+      - run: ./gradlew build
       - uses: actions/setup-node@v3
         with:
           node-version: 18
