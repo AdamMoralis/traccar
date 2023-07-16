@@ -13,7 +13,7 @@ RUN set -ex && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/*
 
-COPY $JAR_FILE /opt/traccar/tracker-server.jar
+COPY target/tracker-server.jar /opt/traccar/tracker-server.jar
 
 
 ENTRYPOINT ["java", "-Xms1g", "-Xmx1g", "-Djava.net.preferIPv4Stack=true"]
