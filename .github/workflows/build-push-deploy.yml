@@ -33,11 +33,17 @@ jobs:
           login-server: traccar.azurecr.io
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
+          
+      - name: Create opt/traccar directory and copy JAR file
+        run: |
+          mkdir -p /opt/traccar
+          cp target/tracker-server.jar /opt/traccar
+        
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
           file: Dockerfile.${{ matrix.os }}
-          tags: traccar.azurecr.io/traccar:v7
+          tags: traccar.azurecr.io/traccar:v5
           platforms: linux
           push: true
       - name: Deploy to Azure VM
@@ -50,8 +56,8 @@ jobs:
             docker login traccar.azurecr.io -u ${{ secrets.ACR_USERNAME }} -p ${{ secrets.ACR_PASSWORD }}
             docker stop traccar || true
             docker rm traccar || true
-            docker pull traccar.azurecr.io/traccar:v1
-            docker run -d --name traccar -p 8082:8082 traccar.azurecr.io/traccar:v7'
+            docker pull traccar.azurecr.io/traccar:v5
+            docker run -d --name traccar -p 8082:8082 traccar.azurecr.io/traccar:v5'
            
   build-installer:
 
@@ -78,11 +84,7 @@ jobs:
             traccar-web/package-lock.json
             traccar-web/modern/package-lock.json
             
-      - name: Create opt/traccar directory
-        run: mkdir -p /opt/traccar
-        
-      - name: Copy Jar file to /opt/traccar
-        run:  cp target/tracker-server.jar /opt/traccar
+      
 
       - run: |
           wget -q https://trials.sencha.com/cmd/7.6.0/SenchaCmd-7.6.0.87-linux-amd64.sh.zip
