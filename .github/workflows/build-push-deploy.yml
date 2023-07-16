@@ -62,8 +62,7 @@ jobs:
           tags: traccar.azurecr.io/traccar:v6
           platforms: linux
           push: true
-          build-args: |
-            JAR_FILE=target/tracker-server.jar
+
       - name: Deploy to Azure VM
         env:
           AZURE_VM_IP: 108.143.109.20
