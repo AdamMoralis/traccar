@@ -20,25 +20,6 @@ jobs:
       matrix:
         os: [ubuntu]
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          submodules: true
-      - run: git checkout Dev
-        working-directory: ./traccar-web
-      - uses: actions/setup-java@v3
-        with:
-          distribution: temurin
-          java-version: 17
-          cache: gradle
-      - run: ./gradlew build
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: npm
-          cache-dependency-path: |
-            traccar-web/package-lock.json
-            traccar-web/modern/package-lock.json
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up QEMU
@@ -52,9 +33,12 @@ jobs:
           login-server: traccar.azurecr.io
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
-          
 
-        
+      - name: Create opt/traccar directory and copy JAR file
+        run: |
+            mkdir -p /opt/traccar
+            cp target/tracker-server.jar /opt/traccar
+
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
@@ -62,6 +46,8 @@ jobs:
           tags: traccar.azurecr.io/traccar:v6
           platforms: linux
           push: true
+          build-args: |
+            JAR_FILE=target/tracker-server.jar
 
       - name: Deploy to Azure VM
         env:
