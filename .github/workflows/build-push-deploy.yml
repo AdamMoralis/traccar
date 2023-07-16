@@ -20,6 +20,25 @@ jobs:
       matrix:
         os: [ubuntu]
     steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          submodules: true
+      - run: git checkout Dev
+        working-directory: ./traccar-web
+      - uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+      - run: ./gradlew build
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+          cache-dependency-path: |
+            traccar-web/package-lock.json
+            traccar-web/modern/package-lock.json
       - name: Checkout
         uses: actions/checkout@v3
       - name: Set up QEMU
