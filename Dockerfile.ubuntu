@@ -4,18 +4,20 @@ ENV TRACCAR_VERSION 5.8
 
 WORKDIR /opt/traccar
 
+# Copy the JAR file from local build output to the Docker image
+COPY jar/tracker-server-all.jar /opt/traccar/tracker-server-all.jar
+
 RUN set -ex && \
     apt-get update && \
-    apt-get install -y --no-install-recommends wget && \
-    wget -qO /opt/traccar/tracker-server-all.jar https://traccarinstallers1.blob.core.windows.net/traccar/tracker-server-all.jar && \
-    apt-get remove -y wget && \
-    apt-get autoremove -y && \
+    TERM=xterm DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends unzip wget && \
+    apt-get autoremove --yes unzip wget && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* /tmp/*
 
 ENTRYPOINT ["java", "-Xms1g", "-Xmx1g", "-Djava.net.preferIPv4Stack=true"]
 
-CMD ["-jar", "tracker-server-all.jar", "conf/traccar.xml"]
+CMD ["-jar", "tracker-server.jar-all", "conf/traccar.xml"]
+
 
 
 
