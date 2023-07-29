@@ -44,7 +44,7 @@ jobs:
           platforms: linux
           push: true
           build-args: |
-            JAR_FILE=https://traccarinstallers1.blob.core.windows.net/traccar/tracker-server.jar
+            JAR_FILE=https://traccarinstallers1.blob.core.windows.net/traccar/tracker-server-all.jar
 
       - name: Deploy to Azure VM
         env:
