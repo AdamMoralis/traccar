@@ -44,7 +44,7 @@ jobs:
           platforms: linux
           push: true
           build-args: |
-            JAR_FILE=target/tracker-server.jar
+            JAR_FILE=tracker-server-all.jar
 
       - name: Deploy to Azure VM
         env:
