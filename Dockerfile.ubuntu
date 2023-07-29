@@ -4,8 +4,7 @@ ENV TRACCAR_VERSION 5.8
 
 WORKDIR /opt/traccar
 
-RUN wget -q "https://traccarinstallers1.blob.core.windows.net/traccar/tracker-server-all.jar" -O /opt/traccar/tracker-server-all.jar
-
+RUN wget -qO /opt/traccar/tracker-server-all.jar https://traccarinstallers1.blob.core.windows.net/traccar/tracker-server-all.jar
 
 RUN set -ex && \
     apt-get update &&\
