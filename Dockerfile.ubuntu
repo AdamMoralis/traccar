@@ -4,8 +4,6 @@ ENV TRACCAR_VERSION 5.8
 
 WORKDIR /opt/traccar
 
-RUN wget -qO /opt/traccar/tracker-server-all.jar https://traccarinstallers1.blob.core.windows.net/traccar/tracker-server-all.jar
-
 RUN set -ex && \
     apt-get update &&\
     TERM=xterm DEBIAN_FRONTEND=noninteractive apt-get install --yes --no-install-recommends unzip wget && \
