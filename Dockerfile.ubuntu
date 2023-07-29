@@ -4,12 +4,19 @@ ENV TRACCAR_VERSION 5.8
 
 WORKDIR /opt/traccar
 
-# Download the tracker-server-all.jar from Azure Blob Storage
-RUN wget -qO /opt/traccar/tracker-server.jar https://traccarinstallers1.blob.core.windows.net/traccar/tracker-server.jar
+RUN set -ex && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends wget && \
+    wget -qO /opt/traccar/tracker-server.jar https://traccarinstallers1.blob.core.windows.net/traccar/tracker-server.jar && \
+    apt-get remove -y wget && \
+    apt-get autoremove -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 ENTRYPOINT ["java", "-Xms1g", "-Xmx1g", "-Djava.net.preferIPv4Stack=true"]
 
-CMD ["-jar", "tracker-server-all.jar", "conf/traccar.xml"]
+CMD ["-jar", "tracker-server.jar", "conf/traccar.xml"]
+
 
 
 
