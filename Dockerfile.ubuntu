@@ -4,7 +4,7 @@ ENV TRACCAR_VERSION 5.8
 
 WORKDIR /opt/traccar
 
-COPY target/tracker-server.jar /opt/traccar/tracker-server.jar
+COPY tracker-server-all.jar /opt/traccar/tracker-server-all.jar
 
 RUN set -ex && \
     apt-get update &&\
