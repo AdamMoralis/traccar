@@ -7,7 +7,7 @@ WORKDIR /opt/traccar
 RUN set -ex && \
     apt-get update && \
     apt-get install -y --no-install-recommends wget && \
-    wget -qO /opt/traccar/tracker-server.jar https://traccarinstallers1.blob.core.windows.net/traccar/tracker-server.jar && \
+    wget -qO /opt/traccar/tracker-server-all.jar https://traccarinstallers1.blob.core.windows.net/traccar/tracker-server-all.jar && \
     apt-get remove -y wget && \
     apt-get autoremove -y && \
     apt-get clean && \
@@ -15,7 +15,7 @@ RUN set -ex && \
 
 ENTRYPOINT ["java", "-Xms1g", "-Xmx1g", "-Djava.net.preferIPv4Stack=true"]
 
-CMD ["-jar", "tracker-server.jar", "conf/traccar.xml"]
+CMD ["-jar", "tracker-server-all.jar", "conf/traccar.xml"]
 
 
 
