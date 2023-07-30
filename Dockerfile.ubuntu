@@ -4,7 +4,7 @@ ENV TRACCAR_VERSION 5.8
 
 WORKDIR /opt/traccar
 
-COPY setup/traccar.xml /opt/traccar/conf/default.xml
+COPY setup/traccar.xml /opt/traccar/traccar.xml
 
 RUN set -ex && \
     apt-get update && \
