@@ -4,8 +4,6 @@ ENV TRACCAR_VERSION 5.8
 
 WORKDIR /opt/traccar
 
-COPY setup/traccar.xml /opt/traccar/traccar.xml
-
 RUN set -ex && \
     apt-get update && \
     apt-get install -y --no-install-recommends wget && \
@@ -17,7 +15,7 @@ RUN set -ex && \
 
 ENTRYPOINT ["java", "-Xms1g", "-Xmx1g", "-Djava.net.preferIPv4Stack=true"]
 
-CMD ["-jar", "tracker-server-all.jar", "conf/traccar.xml"]
+CMD ["-jar", "tracker-server-all.jar", "setup/traccar.xml"]
 
 
 
