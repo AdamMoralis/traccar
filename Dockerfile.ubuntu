@@ -9,6 +9,8 @@ COPY target/tracker-server.jar /opt/traccar/tracker-server.jar
 
 COPY setup/traccar.xml /opt/traccar/traccar.xml
 
+COPY setup/default.xml /opt/traccar/default.xml
+
 RUN set -ex && \
     apt-get update && \
     apt-get install -y --no-install-recommends wget && \
