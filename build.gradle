@@ -3,6 +3,7 @@ plugins {
     id "checkstyle"
     id "com.google.protobuf" version "0.9.3"
     id "org.kordamp.gradle.project-enforcer" version "0.13.0"
+    id "com.github.johnrengelman.shadow" version "7.0.0"
 }
 
 repositories {
@@ -111,4 +112,8 @@ jar {
                 "Implementation-Version": "5.8",
                 "Class-Path": configurations.runtimeClasspath.files.collect { "lib/$it.name" }.join(" "))
     }
+}
+
+shadowJar {
+    zip64 true // Enable zip64 extension
 }
