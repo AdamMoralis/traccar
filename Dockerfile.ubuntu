@@ -11,6 +11,12 @@ COPY setup/traccar.xml /opt/traccar/traccar.xml
 
 COPY setup/default.xml /opt/traccar/default.xml
 
+# Create the logs directory
+RUN mkdir logs
+
+# Create an empty tracker-server.log file inside the logs directory
+RUN touch logs/tracker-server.log
+
 RUN set -ex && \
     apt-get update && \
     apt-get install -y --no-install-recommends wget && \
