@@ -11,6 +11,9 @@ COPY setup/traccar.xml /opt/traccar/traccar.xml
 
 COPY setup/default.xml /opt/traccar/default.xml
 
+# Copy the schema folder from the local directory to the Docker image
+COPY schema /opt/traccar/schema
+
 # Create the logs directory
 RUN mkdir logs
 
