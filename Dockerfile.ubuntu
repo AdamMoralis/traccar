@@ -7,9 +7,9 @@ WORKDIR /opt/traccar
 # Copy the local JAR file from the build output to the Docker image
 # COPY target/tracker-server.jar /opt/traccar/tracker-server.jar
 
-COPY setup/traccar.xml /opt/traccar/traccar.xml
+COPY setup/traccar.xml /opt/traccar/conf/traccar.xml
 
-COPY setup/default.xml /opt/traccar/default.xml
+COPY setup/default.xml /opt/traccar/conf/default.xml
 
 # Copy the schema folder from the local directory to the Docker image
 COPY schema /opt/traccar/schema
@@ -31,7 +31,7 @@ RUN set -ex && \
 
 ENTRYPOINT ["java", "-Xms1g", "-Xmx1g", "-Djava.net.preferIPv4Stack=true"]
 
-CMD ["-jar", "tracker-server-all.jar", "traccar.xml"]
+CMD ["-jar", "tracker-server-all.jar", "conf/traccar.xml"]
 
 
 
